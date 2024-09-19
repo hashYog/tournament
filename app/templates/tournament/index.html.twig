@@ -1,0 +1,78 @@
+{# templates/tournament/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .divisionTable {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .divisionTable th, .divisionTable td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: center;
+        }
+        .divisionTable th {
+            background-color: #f0f0f0;
+        }
+        .teamName {
+            font-weight: bold;
+            text-align: left;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .matchResult {
+            font-size: 0.8em;
+        }
+        .emptyCell {
+            background-color: #ddd;
+        }
+        .nextStageBtn {
+            margin-bottom: 10px;
+        }
+        .divisionTable .rotateText {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            padding: 5px 0;
+            height: 100px;
+        }
+        .playoffGrid {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .playoffStage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .playoffMatch {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Tournament Grid</h1>
+
+    <div id="divisions"></div>
+
+    <div id="playoff">
+        <h2>Playoff</h2>
+        <div class="playoffGrid"></div>
+    </div>
+
+    <button id="nextStageBtn" class="nextStageBtn">Go to the next stage</button>
+    <button id="resetBtn" class="resetBtn">Reset</button>
+
+    <script>
+        var stages = {{ stages|json_encode|raw }};
+    </script>
+{% endblock %}

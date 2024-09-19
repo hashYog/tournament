@@ -1,0 +1,51 @@
+version: "3"
+services:
+    tournament-nginx:
+        build:
+            context: ./.docker
+            dockerfile: nginx.docker
+        container_name: tournament-nginx
+        volumes:
+            - "$PWD/app:/var/www/app:rw"
+        depends_on:
+            - tournament-php-fpm
+        ports:
+            - 8088:80
+        networks:
+            - tournament-network
+    tournament-php-fpm:
+        build:
+            context: ./.docker
+            dockerfile: php-fpm.docker
+        container_name: tournament-php-fpm
+        volumes:
+            - "$PWD/app:/var/www/app:rw"
+        environment:
+            XDEBUG_CONFIG: "remote_host=192.168.21.1 remote_enable=1"
+            PHP_IDE_CONFIG: "serverName=Docker"
+        depends_on:
+            - tournament-mysql
+        networks:
+            - tournament-network
+    tournament-mysql:
+        image: mysql:8
+        container_name: tournament-mysql
+        volumes:
+            - "$PWD/.data/db/mysql8:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: db
+        ports:
+            - 33066:3306
+        networks:
+            - tournament-network
+
+networks:
+    tournament-network:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 192.168.21.0/24
